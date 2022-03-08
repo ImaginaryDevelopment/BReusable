@@ -495,12 +495,14 @@ module FunctionalHelpersAutoTests =
                 testList
                     "cprintf"
                     [
-
+                        testCase "happy"
+                        <| fun () -> cprintf ConsoleColor.Gray "%s" "hello world"
                     ]
                 testList
                     "cprintfn"
                     [
-
+                        testCase "happy"
+                        <| fun () -> cprintf ConsoleColor.Gray "%s" "hello world"
                     ]
                 testList
                     "teeTuple"
@@ -579,18 +581,33 @@ module FunctionalHelpersAutoTests =
                     let expected = typeof<int>
                     let actual = 5 |> getType
                     Expect.equal actual expected null
+                testList
+                    "downcastX"
+                    [
+                        testCase "happy"
+                        <| fun () ->
+                            let expected = 5
+                            let actual = 5<cm> |> downcastX<int>
+                            Expect.equal actual expected null
+                        testCase "unhappy"
+                        <| fun () -> Expect.throws (fun () -> 5<cm> |> downcastX<string> |> ignore) null
+                    ]
 
-                testCase "downcastX"
-                <| fun () ->
-                    let expected = 5
-                    let actual = 5<cm> |> downcastX<int>
-                    Expect.equal actual expected null
+                testList
+                    "castAs"
+                    [
+                        testCase "happy"
+                        <| fun () ->
+                            let expected = 5
+                            let actual = box expected |> castAs<int>
+                            Expect.equal actual (Some expected) null
+                        testCase "unhappy"
+                        <| fun () ->
+                            let input: string = null
+                            Expect.isNone (input |> castAs<int>) null
 
-                testCase "castAs"
-                <| fun () ->
-                    let expected = 5
-                    let actual = box expected |> castAs<int>
-                    Expect.equal actual (Some expected) null
+                    ]
+
 
                 testList
                     "NonNull|UnsafeNull"
@@ -667,6 +684,12 @@ let tuple2Tests =
                 let expected = v, v
                 let actual = Tuple2.curry id v v
                 Expect.equal actual expected null
+            testCase "uncurry"
+            <| fun () ->
+                let v = 6
+                let expected = 12
+                let actual = Tuple2.uncurry (+) (v, v)
+                Expect.equal actual expected null
             testCase "swap"
             <| fun () ->
                 let expected = 2, 1
@@ -700,5 +723,53 @@ let tuple2Tests =
                     Tuple2.extendSnd (fun (a, b) -> a + b) (3, 4)
 
                 Expect.equal actual expected null
-        // let optionOfFst f (x,y) =
+            testList
+                "optionOfFst"
+                [
+                    testCase "happy"
+                    <| fun () ->
+                        let v = 8
+                        let expected = Some(v, v)
+                        let actual = (Some v, v) |> Tuple2.optionOfFst id
+                        Expect.equal actual expected null
+                    testCase "unhappy"
+                    <| fun () ->
+                        let v = 8
+                        let expected = None
+
+                        let actual =
+                            (v, v + 20)
+                            |> Tuple2.optionOfFst (fun i -> if i > 10 then Some i else None)
+
+                        Expect.equal actual expected null
+                ]
+            testList
+                "optionOfSnd"
+                [
+                    testCase "happy"
+                    <| fun () ->
+                        let v = 8
+                        let expected = Some(v, v)
+                        let actual = (v, Some v) |> Tuple2.optionOfSnd id
+                        Expect.equal actual expected null
+                    testCase "unhappy"
+                    <| fun () ->
+                        let v = 8
+                        let expected = None
+
+                        let actual =
+                            (v + 20, v)
+                            |> Tuple2.optionOfSnd (fun i -> if i > 10 then Some i else None)
+
+                        Expect.equal actual expected null
+                ]
+            testCase "mapBoth"
+            <| fun () ->
+                let v = 5
+                let expected = v, v
+
+                let actual =
+                    (1, 1) |> Tuple2.mapBoth (fun i -> i * 5)
+
+                Expect.equal actual expected null
         ]

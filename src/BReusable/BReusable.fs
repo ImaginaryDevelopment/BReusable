@@ -242,15 +242,6 @@ module FunctionalHelpersAuto =
         match o with
         | :? 't as x -> Some x
         | _ -> None
-    // long pipe chains don't allow breakpoints anywhere inside
-    // does this need anything to prevent the method from being inlined/optimized away?
-    let breakpoint x =
-        let result = x
-        result
-
-    let breakpointf f x =
-        let result = f x
-        result
 
     // allows you to pattern match against non-nullables to check for null (in case c# calls)
     let (|NonNull|UnsafeNull|) x =
@@ -314,6 +305,7 @@ let failNullOrEmpty paramName x =
         x
 
 type System.String with
+
 
 
 
@@ -802,6 +794,7 @@ module StringPatterns =
 
 
 
+
         static member IsValueString =
             function
             | ValueString _ -> true
@@ -961,6 +954,7 @@ module Xml =
 
 
 
+
         static member GetElement1 name (x: XElement) = x.Element(XNamespace.None + name)
 
         static member GetElements1 name (x: XElement) =
@@ -974,6 +968,7 @@ module Xml =
 
 //https://blogs.msdn.microsoft.com/dsyme/2009/11/08/equality-and-comparison-constraints-in-f/
 type System.Int32 with
+
 
 
 
@@ -1126,6 +1121,7 @@ module NumPatterns =
         else Zero
 
 type IDictionary<'TKey, 'TValue> with
+
 
 
 
@@ -1302,6 +1298,7 @@ type System.Collections.ObjectModel.ReadOnlyCollection<'t> with
 
 
 
+
     static member Empty =
         System.Collections.ObjectModel.ReadOnlyCollection<'t>(ResizeArray())
 
@@ -1327,10 +1324,12 @@ type IReadOnlyList<'T> with
 
 
 
+
     static member OfSeq(x: _ seq) =
         ReadOnlyCollection.ofSeq x :> IReadOnlyList<_>
 
 type System.Action with
+
 
 
 
@@ -1499,6 +1498,7 @@ type System.Collections.Generic.List<'T> with
 
 
 
+
     static member tryItem i (x: List<'T>) =
         if x.Count > i then Some x.[i] else None
 
@@ -1576,12 +1576,14 @@ type System.Convert with
 
 
 
+
     static member ToGuid(o: obj) = o :?> Guid
     static member ToBinaryData(o: obj) = o :?> byte []
 
 
 // based on http://stackoverflow.com/questions/15115050/f-type-constraints-on-enums
 type System.Enum with
+
 
 
 
@@ -1605,6 +1607,7 @@ type System.Enum with
         Enum.getName<'t> i |> fun x -> Enum.parseT<'t> x
 
 type System.DateTime with
+
 
 
 
@@ -1802,6 +1805,7 @@ module Time =
             None
 
 type System.TimeSpan with
+
 
 
 
