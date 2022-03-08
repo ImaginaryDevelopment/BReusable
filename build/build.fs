@@ -53,6 +53,7 @@ let srcAndTest =
 let distDir = __SOURCE_DIRECTORY__ </> ".." </> "dist"
 let distGlob = distDir </> "*.nupkg"
 
+// see also: https://github.com/dotnet/fsharp/issues/9176
 let coverageThresholdPercent = 8 // inline methods always show as uncovered
 let coverageReportDir =  __SOURCE_DIRECTORY__ </> ".." </> "docs" </> "coverage"
 
