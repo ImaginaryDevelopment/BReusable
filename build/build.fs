@@ -593,15 +593,20 @@ let githubRelease _ =
     |> GitHub.publishDraft
     |> Async.RunSynchronously
 
+let getFormatTargets () =
+    [
+        srcCodeGlob
+        testsCodeGlob
+    ]
+    |> Seq.collect id
+    // Ignore AssemblyInfo
+    |> Seq.filter(fun f -> f.EndsWith("AssemblyInfo.fs") |> not)
+    // code formatting is erasing SRTP
+    |> Seq.filter(fun f -> f.EndsWith("UoM.fs") |> not)
+
 let formatCode _ =
     let result =
-        [
-            srcCodeGlob
-            testsCodeGlob
-        ]
-        |> Seq.collect id
-        // Ignore AssemblyInfo
-        |> Seq.filter(fun f -> f.EndsWith("AssemblyInfo.fs") |> not)
+        getFormatTargets()
         |> String.concat " "
         |> dotnet.fantomas
 
@@ -610,13 +615,7 @@ let formatCode _ =
 
 let checkFormatCode _ =
     let result =
-        [
-            srcCodeGlob
-            testsCodeGlob
-        ]
-        |> Seq.collect id
-        // Ignore AssemblyInfo
-        |> Seq.filter(fun f -> f.EndsWith("AssemblyInfo.fs") |> not)
+        getFormatTargets()
         |> String.concat " "
         |> sprintf "%s --check"
         |> dotnet.fantomas

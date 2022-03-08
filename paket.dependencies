@@ -8,6 +8,7 @@ nuget YoloDev.Expecto.TestSdk 0.11.1
 nuget Microsoft.NET.Test.Sdk 16.8.0
 nuget altcover ~> 7
 
+nuget Expecto.FsCheck
 // [ FAKE GROUP ]
 group Build
     storage: none
