@@ -19,7 +19,10 @@ jobs:
     # Not specifying a version will attempt to install via global.json
     - name: Use .NET Core global.json
       uses: actions/setup-dotnet@v1
-
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      # with:
+      #   repository: ${{ github.repository }}
     - name: Build
       if: runner.os != 'Windows'
       run: |
