@@ -13,6 +13,9 @@ indent_style = space
 indent_size = 4
 end_of_line = crlf
 
+[*.sh]
+end_of_line = lf
+
 [*.{fs,fsi,fsx,config}]
 charset = utf-8
 trim_trailing_whitespace = true
